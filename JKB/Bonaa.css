@@ -1,0 +1,195 @@
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #fce4ec; /* พื้นหลังสีชมพูอ่อน */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    position: relative;
+}
+
+/* --- ส่วนหัวใจ (Heart Button) --- */
+.heart-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    cursor: pointer;
+    z-index: 10;
+    /* เงาฟุ้งๆ ให้ดูลอย */
+    filter: drop-shadow(0 8px 20px rgba(233, 30, 99, 0.3));
+    transition: transform 0.1s ease; /* เอฟเฟกต์ยุบตัวตอนกด */
+}
+
+/* ตอนกดนิ้วลงไป: หัวใจจะยุบลง 10% */
+.heart-container:active {
+    transform: scale(0.9);
+}
+
+.empty-heart, .filled-heart {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.empty-heart {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" stroke="%23e91e63" stroke-width="1"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>');
+    opacity: 0.8;
+}
+
+.filled-heart {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23e91e63" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>');
+    transform: scale(0);
+    transform-origin: center center;
+    transition: transform 1s linear; /* สีค่อยๆ เต็มใน 1 วินาที */
+}
+
+
+.tapp-text {
+    position: absolute;
+    bottom: -50px;
+    width: 200%;
+    left: -50%;
+    text-align: center;
+    color: #c2185b;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    animation: textPulse 1.5s infinite ease-in-out;
+    pointer-events: none;
+}
+.tap-text {
+    line-height: 5.6;
+    position: absolute;
+    bottom: -50px;
+    width: 200%;
+    left: -50%;
+    text-align: center;
+    color: #c2185b;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    animation: textPulse 1.5s infinite ease-in-out;
+    pointer-events: none;
+}
+
+@keyframes textPulse {
+    0%, 100% { opacity: 0.6; transform: translateY(0); }
+    50% { opacity: 1; transform: translateY(-3px); }
+}
+
+/* --- การ์ด (Card) --- */
+.card {
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15);
+    padding: 30px;
+    text-align: center;
+    width: 350px; /* ความกว้างการ์ด */
+    display: none;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s ease;
+}
+
+.card.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- ส่วนรูปโพลารอยด์ (Polaroid) --- */
+.polaroid-wrapper {
+    background-color: white;
+    padding: 10px 10px 5px 10px; /* ขอบล่างหนาเหมือน Polaroid */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15); /* เงาให้รูปลอย */
+    width: fit-content;
+    margin: 20px auto; /* จัดกึ่งกลาง */
+    transform: scale(0) rotate(-10deg); /* เริ่มต้นเล็กๆ และเอียง */
+    opacity: 0;
+}
+
+.card.show .polaroid-wrapper {
+    /* Animation: Zoom ขึ้นมา + หมุนเล็กน้อย */
+    animation: popUpPolaroid 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    animation-delay: 0.2s; /* ให้การ์ดขึ้นมาก่อนนิดนึงแล้วค่อยโชว์รูป */
+}
+
+@keyframes popUpPolaroid {
+    0% {
+        transform: scale(0.3) rotate(-10deg);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1) rotate(-3deg); /* จบที่เอียงนิดๆ ธรรมชาติ */
+        opacity: 1;
+    }
+}
+
+.photo {
+     /* ขนาดรูป */
+    height: 200px;
+    overflow: hidden;
+    background-color: #f0f0f0;
+}
+
+.photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* --- ส่วนตัวหนังสือ (Text) --- */
+.greeting {
+    margin-bottom: 10px;
+    min-height: 40px;
+}
+
+.greeting span {
+    display: inline-block;
+    animation: textFloat 2s infinite ease-in-out;
+    color: #e91e63;
+    font-size: 1.8em;
+    font-family: 'Brush Script MT', cursive; /* ฟอนต์ลายมือ */
+}
+
+@keyframes textFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+.n{
+    font-family: 'Times New Roman', Times, serif;
+    color: #d2345c;
+    
+}
+.note {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 0.95em;
+    color: #d2345c;
+    line-height: 1.6;
+    margin-top: 15px;
+    min-height: 80px;
+    text-align: justify; /* จัดข้อความให้ชิดซ้ายขวา (เลือกได้) */
+    text-justify: inter-word;
+}
+
+/* เครื่องเล่นเพลง */
+.music-player audio {
+    width: 100%;
+    height: 30px;
+    margin-top: 25px;
+    border-radius: 20px;
+    opacity: 0.8;
+}
